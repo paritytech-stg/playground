@@ -22,19 +22,10 @@ env:
 
 jobs:
   preflight:
-    if: github.event.pull_request.draft == false
+    if: github.event.pull_request.draft == false || contains(github.event.label.name, 'Bug') || contains(github.event.pull_request.labels.*.name, 'Bug')
     uses: ./.github/workflows/reusable.yaml
   job1:
-    # if: github.event.pull_request.draft == false
-    runs-on: parity-default
-    needs: preflight
-    container:
-      image: docker.io/paritytech/ci-unified:bullseye-1.81.0-2024-11-19-v202411281558
-    steps:
-      - run: sleep 180
-  job2:
-    # if: github.event.pull_request.draft == false
     runs-on: parity-default
     needs: preflight
     steps:
-      - run: sleep 300
+      - run: echo ok
