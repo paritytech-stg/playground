@@ -1,0 +1,40 @@
+name: CI
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions: # allow the action to comment on the PR
+  contents: write
+  issues: write
+  pull-requests: write
+  actions: read
+
+env:
+  Green: "\e[32m"
+  NC: "\e[0m"
+
+jobs:
+  preflight:
+    if: github.event.pull_request.draft == false
+    uses: ./.github/workflows/reusable.yaml
+  job1:
+    # if: github.event.pull_request.draft == false
+    runs-on: parity-default
+    needs: preflight
+    container:
+      image: docker.io/paritytech/ci-unified:bullseye-1.81.0-2024-11-19-v202411281558
+    steps:
+      - run: sleep 180
+  job2:
+    # if: github.event.pull_request.draft == false
+    runs-on: parity-default
+    needs: preflight
+    steps:
+      - run: sleep 300
