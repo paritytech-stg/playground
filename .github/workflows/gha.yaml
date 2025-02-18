@@ -22,7 +22,6 @@ env:
 
 jobs:
   isdraft:
-    runs-on: ubuntu-latest
     uses: ./.github/workflows/reusable-isdraft.yaml
   preflight:
     needs: isdraft
